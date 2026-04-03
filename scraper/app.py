@@ -7,10 +7,9 @@ app = Flask(__name__)
 
 @app.route("/scrape", methods=["GET"])
 def scrape_jobs():
-    # Target URL for backend/full-stack jobs
-    url = "https://weworkremotely.com/categories/remote-back-end-programming-jobs"
-    headers = {"User-Agent": "Mozilla/5.0"}
-    response = requests.get(url, headers=headers)
+    # Reliable sandbox URL for portfolio demonstration
+    url = "https://realpython.github.io/fake-jobs/"
+    response = requests.get(url)
 
     if response.status_code != 200:
         return jsonify({"error": "Failed to fetch page"}), 500
@@ -18,22 +17,22 @@ def scrape_jobs():
     soup = BeautifulSoup(response.content, "html.parser")
     jobs = []
 
-    # Scrape the job listings
-    for article in soup.find_all("li", class_="feature"):
-        title_elem = article.find("span", class_="title")
-        company_elem = article.find("span", class_="company")
-        link_elem = article.find("a", recursive=False)
+    # Scrape the job listings based on the sandbox's HTML structure
+    for card in soup.find_all("div", class_="card-content"):
+        title_elem = card.find("h2", class_="title")
+        company_elem = card.find("h3", class_="subtitle")
+        location_elem = card.find("p", class_="location")
 
-        if title_elem and company_elem and link_elem:
+        if title_elem and company_elem and location_elem:
             jobs.append(
                 {
                     "title": title_elem.text.strip(),
                     "company": company_elem.text.strip(),
-                    "url": f"https://weworkremotely.com{link_elem['href']}",
+                    "location": location_elem.text.strip(),
                 }
             )
 
-        # Limit to top 5 recent jobs for the demo pipeline
+        # Grab the top 5 jobs for our pipeline
         if len(jobs) >= 5:
             break
 
