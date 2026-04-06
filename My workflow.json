@@ -1,0 +1,192 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -64
+      ],
+      "id": "4a77b445-8ce6-417f-a30d-45028d14252a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "http://python_scraper:5000/scrape",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16,
+        -64
+      ],
+      "id": "e12fa578-148f-4584-9316-7787f6a90cd2",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -64
+      ],
+      "id": "7709b4b8-a716-469b-92de-c3fb3af8aac3",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an executive assistant. I am looking for freelance backend development jobs. \nHere is a raw JSON list of jobs I just scraped:\n{{ JSON.stringify($json) }}\n\nPlease write a short email summarizing these opportunities. \nCRITICAL: Format the response entirely in valid HTML. Use <ul> and <li> for bullet points, and <strong> for highlighting the Job Title, Company, and Location. Add <br> for line breaks. Do NOT use markdown. Do NOT wrap the output in HTML code blocks. Return only the raw HTML text."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        -64
+      ],
+      "id": "1c62a5ff-a0ac-44bd-9967-2e450166b3d8",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1TlSiKSllSW6gqtH",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "samyb.samir@gmail.com",
+        "toEmail": "samyb.samir@gmail.com",
+        "subject": "Daily Freelance Job Leads",
+        "html": "={{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        816,
+        -64
+      ],
+      "id": "81308d13-c94f-48c9-88e9-2059a116a284",
+      "name": "Send an Email",
+      "webhookId": "d8680767-4bbd-4710-81ab-d1cd5459b126",
+      "credentials": {
+        "smtp": {
+          "id": "kexyjFJ4WIun6dnM",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2026-04-03T02:02:16.254+02:00",
+          "Readable date": "April 3rd 2026, 2:02:16 am",
+          "Readable time": "2:02:16 am",
+          "Day of week": "Friday",
+          "Year": "2026",
+          "Month": "April",
+          "Day of month": "03",
+          "Hour": "02",
+          "Minute": "02",
+          "Second": "16",
+          "Timezone": "Africa/Cairo (UTC+02:00)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "f98f8f6b-a951-41a0-88bc-52c3aefe3cf7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "816cbc342dcd67b87734deb06ea2e50ec01844e34289029f374f2961e50ab11c"
+  },
+  "id": "xnAd3kGWRujUgbaP",
+  "tags": []
+}
