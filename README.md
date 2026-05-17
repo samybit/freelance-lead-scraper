@@ -28,7 +28,6 @@ This project is built using modern, scalable microservices:
 
 ## 📸 Project Showcase
 
-*(Tip: Add your screenshots here before uploading to GitHub\!)*
 
   * **The n8n Workflow:**
   * **The Custom Python Microservice:**
