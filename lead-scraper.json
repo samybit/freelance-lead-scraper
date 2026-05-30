@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "lead-scraper",
   "nodes": [
     {
       "parameters": {
@@ -182,7 +182,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "f98f8f6b-a951-41a0-88bc-52c3aefe3cf7",
+  "versionId": "6e24f69c-75d8-438a-b7a0-b60d420136af",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "816cbc342dcd67b87734deb06ea2e50ec01844e34289029f374f2961e50ab11c"
